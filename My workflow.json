@@ -1,0 +1,109 @@
+{
+  "name": "My workflow",
+  "nodes": [
+{
+"parameters": {
+"httpMethod": "POST",
+"path": "meu-webhook-crm",
+"responseMode": "responseNode",
+"options": {
+"allowedOrigins": "*"
+}
+},
+"type": "n8n-nodes-base.webhook",
+"typeVersion": 2.2,
+"position": [
+0,
+0
+],
+"id": "5ebbcfd1-b80f-4040-a415-07e434c8d32a",
+"name": "Webhook",
+"webhookId": "meu-webhook-crm"
+},
+{
+"parameters": {
+"respondWith": "json",
+"responseBody": "={{ JSON.parse($json.content.parts[0].text) }}",
+"options": {}
+},
+"type": "n8n-nodes-base.respondToWebhook",
+"typeVersion": 1.5,
+"position": [
+608,
+0
+],
+"id": "d826c80b-58ed-466b-98d2-171d31313775",
+"name": "Respond to Webhook"
+},
+{
+"parameters": {
+"modelId": {
+"__rl": true,
+"mode": "list",
+"value": "models/gemini-3-flash-preview"
+},
+"messages": {
+"values": [
+{
+  "content": "=Atue como um especialista em triagem comercial. Analise a mensagem do cliente abaixo e devolva ESTRITAMENTE um objeto JSON válido contendo as chaves: \"categoria\", \"prioridade\" e \"resposta\". Não adicione blocos de código Markdown (```json) ou qualquer texto fora do JSON.\n\nAVALIE A MENSAGEM SEGUINDO ESTA ORDEM DE REGRAS ABSOLUTAS:\n\n1. DÚVIDAS SOBRE O PROJETO: Se o cliente deseja criar um site ou app, MAS demonstra dúvidas sobre qual tecnologia usar ou não tem os requisitos fechados, defina categoria como \"Consultoria\" e prioridade como \"Media\".\n\n2. PRONTO PARA CONTRATAR: Se o cliente tem os requisitos definidos e afirma claramente que quer um orçamento ou iniciar o desenvolvimento, defina categoria como \"Desenvolvimento\" e prioridade como \"Alta\".\n\n3. PESQUISA E APRENDIZADO: Se o cliente afirma que deseja apenas aprender a programar ou entender mais sobre tecnologia, defina categoria como \"Cursos\" e prioridade como \"Baixa\".\n\n4. OUTROS: Para assuntos não listados, use \"Outros serviços\" e prioridade \"Baixa\".\n\nDIRETRIZ DA RESPOSTA: Formule uma resposta comercial empática sugerindo o próximo passo.\n\nMensagem do cliente: {{$json.body.mensagem}}"
+}
+]
+},
+"builtInTools": {},
+"options": {}
+},
+"type": "@n8n/n8n-nodes-langchain.googleGemini",
+"typeVersion": 1.2,
+"position": [
+224,
+0
+],
+"id": "a8fb3d7d-ebbe-41b3-85a6-43d35e20de5d",
+"name": "Message a model",
+"credentials": {
+"googlePalmApi": {
+"id": null,
+"name": "",
+"__aiGatewayManaged": true
+}
+}
+}
+],
+"pinData": {},
+"connections": {
+"Webhook": {
+"main": [
+[
+{
+"node": "Message a model",
+"type": "main",
+"index": 0
+}
+]
+]
+},
+"Message a model": {
+"main": [
+[
+{
+"node": "Respond to Webhook",
+"type": "main",
+"index": 0
+}
+]
+]
+}
+},
+"active": false,
+"settings": {
+"executionOrder": "v1",
+"binaryMode": "separate"
+},
+"versionId": "d556286d-48d7-4e7b-ab1a-7c9c41254af7",
+"meta": {
+"templateCredsSetupCompleted": true,
+"instanceId": ""
+},
+"nodeGroups": [],
+"tags": []
+}
